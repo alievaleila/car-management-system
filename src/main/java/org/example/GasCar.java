@@ -6,8 +6,12 @@ public class GasCar extends Car implements Refuelable, Drivable {
     private double tankCapacityLiters;
     private double fuelConsumptionPer100Km;
 
-    public GasCar(String brand, String model, int year, SensorSuite sensors) {
+    public GasCar(String brand, String model, int year, SensorSuite sensors, double fuelConsumptionPer100Km,
+                  double fuelLiters, double tankCapacityLiters) {
         super(brand, model, year, sensors);
+        this.fuelConsumptionPer100Km = fuelConsumptionPer100Km;
+        this.fuelLiters = fuelLiters;
+        this.tankCapacityLiters = tankCapacityLiters;
     }
 
     @Override

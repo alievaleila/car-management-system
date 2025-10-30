@@ -1,6 +1,6 @@
 package org.example;
 
-public class ElectricCar extends Car implements Rechargeable{
+public class ElectricCar extends Car implements Rechargeable {
 
     private double batteryKWh;
     private double batteryCapacityKWh;
@@ -18,12 +18,20 @@ public class ElectricCar extends Car implements Rechargeable{
 
     @Override
     protected boolean hasEnoughEnergyFor(double km) {
-        return false;
+        if (batteryKWh < (km / 100) * consumptionKWhPer100Km) {
+            throw new InsufficientEnergyException(getBrand() + " " + getModel() + " has insufficient energy.");
+        } else {
+            return true;
+        }
     }
 
     @Override
     protected void consumeFor(double km) {
-
+        if (!hasEnoughEnergyFor(km)) {
+            throw new InsufficientEnergyException(getBrand() + " " + getModel() + " has insufficient energy.");
+        }
+        batteryKWh -= (km / 100) * consumptionKWhPer100Km;
+        System.out.println("Remaining battery: " + batteryKWh + "KWh.");
     }
 
     public double getBatteryCapacityKWh() {
@@ -60,21 +68,44 @@ public class ElectricCar extends Car implements Rechargeable{
 
     @Override
     public void recharge(double khw) {
+        if (khw < 0) {
+            throw new IllegalOperationException("khw can't be negative.");
+        }
 
+        if (batteryKWh + khw > batteryCapacityKWh) {
+            System.out.println("Battery is full.Excess energy is not added.");
+        } else {
+            batteryKWh += khw;
+        }
+        System.out.println("Current battery level is " + batteryKWh + " khw.");
     }
 
     @Override
     public void drive(double km) {
+        if (!isRunning()) {
+            System.out.println(getBrand() + " " + getModel() + " is not driving.");
+        }
+        hasEnoughEnergyFor(km);
+        consumeFor(km);
 
+        System.out.println(getBrand() + " " + getModel() + " is driving" + km + " km");
     }
 
     @Override
     public void enableAutopilot() {
-
+        if (isRunning() && isAutopilotOn() && getSensors().allOk() && batteryKWh >= 0.15 * batteryCapacityKWh) {
+            setAutopilotOn(true);
+        } else {
+            System.out.println("Autopilot is inaccessible.");
+        }
     }
 
     @Override
     public void disableAutopilot() {
-
+        if (isAutopilotOn()) {
+            setAutopilotOn(false);
+        } else {
+            System.out.println("Autopilot has already disabled.");
+        }
     }
 }
