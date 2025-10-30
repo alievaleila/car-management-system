@@ -14,7 +14,6 @@ public abstract class Car implements Drivable, AutopilotCapable{
         this.model = model;
         this.year = year;
         this.sensors= sensors;
-
     }
 
     public boolean isAutopilotOn() {

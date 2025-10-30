@@ -1,14 +1,19 @@
 package org.example;
 
-public class ElectricCar extends Car implements Rechargeable,Drivable,AutopilotCapable{
+public class ElectricCar extends Car implements Rechargeable{
 
     private double batteryKWh;
     private double batteryCapacityKWh;
     private double consumptionKWhPer100Km;
     private int regenPercent;
 
-    public ElectricCar(String brand, String model, int year, SensorSuite sensors) {
+    public ElectricCar(String brand, String model, int year, SensorSuite sensors, double batteryCapacityKWh,
+                       double batteryKWh, double consumptionKWhPer100Km, int regenPercent) {
         super(brand, model, year, sensors);
+        this.batteryCapacityKWh = batteryCapacityKWh;
+        this.batteryKWh = batteryKWh;
+        this.consumptionKWhPer100Km = consumptionKWhPer100Km;
+        this.regenPercent = regenPercent;
     }
 
     @Override

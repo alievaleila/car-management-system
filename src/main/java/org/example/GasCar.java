@@ -1,6 +1,6 @@
 package org.example;
 
-public class GasCar extends Car implements Refuelable, AutopilotCapable, Drivable {
+public class GasCar extends Car implements Refuelable, Drivable {
 
     private double fuelLiters;
     private double tankCapacityLiters;
@@ -62,29 +62,45 @@ public class GasCar extends Car implements Refuelable, AutopilotCapable, Drivabl
 
     @Override
     public void drive(double km) {
-
+        if (hasEnoughEnergyFor(km)) {
+            consumeFor(km);
+            System.out.println(getBrand() + " " + getModel() + " is driving");
+        } else {
+            throw new InsufficientEnergyException("Fuel is insufficient.");
+        }
     }
 
     @Override
     public void enableAutopilot() {
-
+        if (isRunning() && getSensors().allOk() && fuelLiters >= 5) {
+            setAutopilotOn(true);
+            System.out.println(getBrand() + " " + getModel() + " has enabled autopilot.");
+        } else {
+            System.out.println("Autopilot is inaccessible.");
+        }
     }
 
     @Override
     public void disableAutopilot() {
-
+        if (isAutopilotOn()) {
+            setAutopilotOn(false);
+            System.out.println(getBrand() + " " + getModel() + " has disabled autopilot");
+        } else {
+            System.out.println("Autopilot is already disabled.");
+        }
     }
 
     @Override
     public void start() {
-        if (isRunning()) {
-            System.out.println(getBrand() + " " + getModel() + " has already started");
-        }
 
         if (fuelLiters <= 0) {
-            throw new InsufficientEnergyException("Fuel is insufficient");
+            throw new InsufficientEnergyException("Fuel is insufficient.");
         }
 
+
+        if (isRunning()) {
+            System.out.println(getBrand() + " " + getModel() + " has already started.");
+        }
         setRunning(true);
         System.out.println(getBrand() + " " + getModel() + " has started.");
     }
@@ -92,6 +108,11 @@ public class GasCar extends Car implements Refuelable, AutopilotCapable, Drivabl
 
     @Override
     public void stop() {
-
+        if (isRunning()) {
+            setRunning(false);
+            System.out.println(getBrand() + " " + getModel() + " has stopped.");
+        } else {
+            System.out.println(getBrand() + " " + getModel() + " has already stopped.");
+        }
     }
 }
